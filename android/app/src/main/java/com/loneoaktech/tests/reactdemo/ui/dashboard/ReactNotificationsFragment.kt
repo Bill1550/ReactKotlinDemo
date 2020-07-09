@@ -6,10 +6,10 @@ import com.loneoaktech.tests.reactdemo.data.NavAction
 
 class ReactNotificationsFragment : ReactBaseFragment() {
 
+    override fun getComponentName(): String = "HelloFragment2App"
 
     override fun getNavActionId(navAction: NavAction): Int? =
         when(navAction.url) {
-
             "/home" -> R.id.action_navigation_notifications_to_navigation_home
             else -> null
         }

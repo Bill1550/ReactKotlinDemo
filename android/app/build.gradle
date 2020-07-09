@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-def useIntlJsc = false
+apply from: "../../node_modules/react-native/react.gradle"
 
 android {
     compileSdkVersion 30
@@ -49,13 +49,12 @@ dependencies {
     implementation "com.jakewharton.timber:timber:4.7.1"
     implementation "com.facebook.react:react-native:+"
 
+    implementation project(':rn-fetch-blob')
+    implementation project(':react-native-action-sheet')
+    implementation project(':react-native-video')
+    implementation 'org.webkit:android-jsc:+'
 
-    if ( useIntlJsc )
-        implementation 'org.webkit:android-jsc-intl:+'
-    else
-        implementation 'org.webkit:android-jsc:+'
-
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 

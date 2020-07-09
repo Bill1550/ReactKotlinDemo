@@ -44,7 +44,7 @@ abstract class ReactBaseFragment : Fragment() {
     ): View? {
 //        return super.onCreateView(inflater, container, savedInstanceState)
         return ReactRootView( requireContext() ).also { it.startReactApplication( reactInstanceManager,
-            arguments?.getString(ARG_COMPONENT_NAME) ?: "MyReactNativeApp")
+            getComponentName() )
         }
     }
 
@@ -86,8 +86,12 @@ abstract class ReactBaseFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         Timber.i("onDestroy, comp=${arguments?.getString(ARG_COMPONENT_NAME)}")
-        (view as? ReactRootView)?.unmountReactApplication()
+        (view as? ReactRootView)?.unmountReactApplication()?.let { Timber.i("React app unmounted") }
 //        reactInstanceManager.onHostDestroy(activity)
+    }
+
+    open fun getComponentName(): String {
+        return  arguments?.getString(ARG_COMPONENT_NAME) ?: "MyReactNativeApp"
     }
 
     /**

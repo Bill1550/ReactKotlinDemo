@@ -48,6 +48,33 @@ class HelloFragment2 extends React.Component {
     }
 }
 
+class AppFragment extends React.Component {
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.hello}>App Fragment!</Text>
+                <Button
+                    onPress={() => {
+                        console.log("requesting nav to /book")
+                        AppNavigate.navigate("/home")
+                    }}
+                    title={"Navigate Home"}
+                />
+            </View>
+        );
+    }
+
+    componentDidMount() {
+        console.log("Mounted")
+    }
+
+    componentWillUnmount() {
+        console.log("Unmounted")
+    }
+
+}
+
 var styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -81,4 +108,9 @@ AppRegistry.registerComponent(
 AppRegistry.registerComponent(
     'HelloFragment2App',
     () => HelloFragment2
+)
+
+AppRegistry.registerComponent(
+    'AppFragmentApp',
+    () => AppFragment
 )

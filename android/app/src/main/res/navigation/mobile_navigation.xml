@@ -22,10 +22,6 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.loneoaktech.tests.reactdemo.ui.dashboard.ReactDashboardFragment"
         android:label="@string/title_dashboard" >
-        <argument
-            android:name="arg_component_name"
-            app:argType="string"
-            android:defaultValue="HelloFragment1App" />
         <action
             android:id="@+id/action_navigation_dashboard_to_navigation_home"
             app:destination="@id/navigation_home" />
@@ -36,10 +32,7 @@
         android:name="com.loneoaktech.tests.reactdemo.ui.dashboard.ReactNotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" >
-        <argument
-            android:name="arg_component_name"
-            app:argType="string"
-            android:defaultValue="HelloFragment2App" />
+
         <action
             android:id="@+id/action_navigation_notifications_to_navigation_home"
             app:destination="@id/navigation_home"
