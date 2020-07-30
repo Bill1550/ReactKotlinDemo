@@ -17,6 +17,9 @@ import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 
 
+/**
+ * Base fragment to hold the RN view.
+ */
 abstract class ReactBaseFragment : Fragment() {
 
     companion object {

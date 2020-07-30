@@ -6,7 +6,7 @@ import com.loneoaktech.tests.reactdemo.data.NavAction
 
 class ReactDashboardFragment : ReactBaseFragment() {
 
-    override fun getComponentName(): String = "AppFragmentApp"
+    override fun getComponentName(): String = "AppFragmentRnApp"
 
     override fun getNavActionId(navAction: NavAction): Int? =
         when(navAction.url) {

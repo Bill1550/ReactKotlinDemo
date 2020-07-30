@@ -111,6 +111,6 @@ AppRegistry.registerComponent(
 )
 
 AppRegistry.registerComponent(
-    'AppFragmentApp',
+    'AppFragmentRnApp',
     () => AppFragment
 )

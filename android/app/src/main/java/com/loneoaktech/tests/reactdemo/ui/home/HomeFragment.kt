@@ -17,8 +17,11 @@ import com.loneoaktech.tests.reactdemo.R
 import com.loneoaktech.tests.reactdemo.TestActivity
 import timber.log.Timber
 
+/**
+ * A simple home fragment.
+ * It contains a button to launch RN inside a separate activity.
+ */
 class HomeFragment : Fragment() {
-
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -27,8 +30,7 @@ class HomeFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val textView: TextView = root.findViewById(R.id.text_home)
 
