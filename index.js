@@ -5,10 +5,15 @@ import {
     Text,
     View,
     Button,
-    Alert
+    Alert,
+    AsyncStorage,
+    NativeEventEmitter
 } from 'react-native';
+import moment from 'moment';
 
 import AppNavigate from './AppNavigate'
+
+var staticDataItem = '-- empty --';
 
 class HelloWorld extends  React.Component {
     render() {
@@ -31,7 +36,24 @@ class HelloFragment1 extends React.Component {
     }
 }
 
-class HelloFragment2 extends React.Component {
+class NotificationsFragment extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { persisted: "--empty--"};
+        this.retrieve()
+    }
+
+    async retrieve() {
+        try {
+            const value = await AsyncStorage.getItem('key1');
+            if ( value !== null ) {
+                this.setState( { persisted: value })
+            }
+        } catch (error ) {
+            console.log("Error retrieving Key1")
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -43,17 +65,50 @@ class HelloFragment2 extends React.Component {
                     }}
                     title={"Navigate Home"}
                 />
+                <Text style={styles.hello}>{this.state.persisted}</Text>
+
+                <Button
+                    onPress={() => {
+                        console.log("Update clicked")
+                        // this.setState( { persisted: "--Updated--"} )
+                        _storeData( "Updated " + moment().format("hh:mm:ss")).then(
+                           this.retrieve()
+                        )
+                    }}
+                    title={"Update"}
+                />
             </View>
         );
     }
 }
 
-class AppFragment extends React.Component {
+AppRegistry.registerComponent(
+    'NotificationsFragmentRnApp',
+    () => NotificationsFragment
+)
 
+let _storeData = async ( value ) => {
+    try {
+        await AsyncStorage.setItem("key1", value );
+    } catch (error) {
+        console.log( "error storing data");
+    }
+}
+
+let _retrieveData = async () => {
+    try {
+        const value = await AsyncStorage.getItem('key1');
+    } catch (error ) {
+
+    }
+}
+
+class DashboardComponent extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.hello}>App Fragment!</Text>
+                <Text style={styles.hello}>Dashboard Fragment</Text>
+                <Text style={styles.hello}>{staticDataItem}</Text>
                 <Button
                     onPress={() => {
                         console.log("requesting nav to /book")
@@ -61,19 +116,39 @@ class AppFragment extends React.Component {
                     }}
                     title={"Navigate Home"}
                 />
+                <Button
+                    onPress={() => {
+                        console.log("changing static item")
+                        staticDataItem = '-- not empty --'
+                    }}
+                    title={"Change static"}
+                />
             </View>
         );
     }
 
     componentDidMount() {
-        console.log("Mounted")
+        console.log("Dashboard Component Mounted")
+        const emitter = new NativeEventEmitter(AppNavigate)
+            emitter.addListener(
+            "AndroidMsg", (event) => {
+
+                console.log( "Event, key1=" + event.key1 )
+            },
+            null
+        )
     }
 
     componentWillUnmount() {
         console.log("Unmounted")
     }
-
 }
+
+AppRegistry.registerComponent(
+    'DashboardComponentRnApp',
+    () => DashboardComponent
+)
+
 
 var styles = StyleSheet.create({
     container: {
@@ -105,12 +180,4 @@ AppRegistry.registerComponent(
     () => HelloFragment1
 )
 
-AppRegistry.registerComponent(
-    'HelloFragment2App',
-    () => HelloFragment2
-)
 
-AppRegistry.registerComponent(
-    'AppFragmentRnApp',
-    () => AppFragment
-)

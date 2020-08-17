@@ -6,7 +6,7 @@ import com.loneoaktech.tests.reactdemo.data.NavAction
 
 class ReactNotificationsFragment : ReactBaseFragment() {
 
-    override fun getComponentName(): String = "HelloFragment2App"
+    override fun getComponentName(): String = "NotificationsFragmentRnApp"
 
     override fun getNavActionId(navAction: NavAction): Int? =
         when(navAction.url) {
