@@ -11,19 +11,94 @@ import {
 } from 'react-native';
 import moment from 'moment';
 
-import AppNavigate from './AppNavigate'
+import ReactNativeActionToShell from './ReactNativeActionToShell'
+
+import  ActionSheet  from './ReactNativeActionSheet'
 
 var staticDataItem = '-- empty --';
+var helloCounter = 0;  // some static data that we will modify.
+
+let actionSheetOptions = ['Option one', 'Option two', 'Option three']
 
 class HelloWorld extends  React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { uiTheme: props.uiTheme, screen: props.screen };
+    }
+
     render() {
+        let activeStyle = (this.state.uiTheme === 'Dark') ? darkStyles : lightStyles;
+        helloCounter++;
+
         return (
-            <View style={styles.container}>
-                <Text style={styles.hello}>Hello from React Native!</Text>
+
+            <View style={activeStyle.container}>
+                <Text style={activeStyle.hello}>Hello from React Native!</Text>
+                <Text style={activeStyle.subhead}>Counter: {helloCounter}</Text>
+                <Text style={activeStyle.subhead}>Screen: {this.state.screen}</Text>
+                <Text style={activeStyle.subhead}>ApiKey: {this.props.apiKey}</Text>
+                <Text style={activeStyle.tiny}>JWT: {this.props.jwt}</Text>
+                <Button
+                    onPress={() => {
+                        console.log("requesting nav to /book")
+                        ReactNativeActionToShell.handleAction( { type: "url", url: "/book" } )
+                    }}
+                    title={"Navigate to Get Care"}
+                />
+                <Text style={activeStyle.subhead}>-------</Text>
+                <Button
+                    onPress={() => {
+                        console.log("requesting nav to /about")
+                        ReactNativeActionToShell.handleAction( { type: "url", url: "/about" } )
+                    }}
+                    title={"Show About"}
+                />
+                <Text style={activeStyle.subhead}>-------</Text>
+                <Button
+                    onPress={() => {
+                        console.log("opening action sheet")
+                        ActionSheet.showActionSheetWithOptions(
+                            {
+                                options: actionSheetOptions,
+                                cancelButtonIndex: 0,
+                                destructiveButtonIndex: 1,
+                                tintColor: 'blue'
+                            },
+                            (buttonIndex) => {
+                                console.log('Action sheet clicked:', buttonIndex )
+                            }
+                        )
+                    }}
+                    title={"Action!"}
+                />
             </View>
         );
     }
+
+    componentDidMount() {
+        console.log("HelloWorld Component Mounted")
+        const emitter = new NativeEventEmitter(ReactNativeActionToShell)
+        emitter.addListener(
+            "AndroidMsg", (event) => {
+
+                console.log( "Event, type=" + event.type );
+                if ( event.type === "uiTheme" )
+                    this.setState({ uiTheme: event.uiTheme, screen: this.state.screen });
+
+                if ( event.type === "screen") {
+                    console.log( "Screen event: " + event.screen )
+                    this.setState({uiTheme: this.state.uiTheme, screen: event.screen});
+                }
+            },
+            null
+        )
+    }
+
+    componentWillUnmount() {
+        console.log("Unmounted")
+    }
 }
+
 
 class HelloFragment1 extends React.Component {
     render() {
@@ -55,13 +130,14 @@ class NotificationsFragment extends React.Component {
     }
 
     render() {
+        let styles = darkStyles
         return (
             <View style={styles.container}>
                 <Text style={styles.hello}>Hello Fragment 2!</Text>
                 <Button
                     onPress={() => {
                         console.log("requesting nav to /book")
-                        AppNavigate.navigate("/home")
+                        ReactNativeActionToShell.handleAction({ type: "url", url: "/home"})
                     }}
                     title={"Navigate Home"}
                 />
@@ -105,6 +181,7 @@ let _retrieveData = async () => {
 
 class DashboardComponent extends React.Component {
     render() {
+        let styles = darkStyles
         return (
             <View style={styles.container}>
                 <Text style={styles.hello}>Dashboard Fragment</Text>
@@ -112,7 +189,7 @@ class DashboardComponent extends React.Component {
                 <Button
                     onPress={() => {
                         console.log("requesting nav to /book")
-                        AppNavigate.navigate("/home")
+                        ReactNativeActionToShell.handleAction({ type: "url", url: "/home" } )
                     }}
                     title={"Navigate Home"}
                 />
@@ -129,7 +206,7 @@ class DashboardComponent extends React.Component {
 
     componentDidMount() {
         console.log("Dashboard Component Mounted")
-        const emitter = new NativeEventEmitter(AppNavigate)
+        const emitter = new NativeEventEmitter(ReactNativeActionToShell)
             emitter.addListener(
             "AndroidMsg", (event) => {
 
@@ -146,11 +223,11 @@ class DashboardComponent extends React.Component {
 
 AppRegistry.registerComponent(
     'DashboardComponentRnApp',
-    () => DashboardComponent
+    () => DashboardrComponent
 )
 
 
-var styles = StyleSheet.create({
+const lightStyles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center'
@@ -166,9 +243,45 @@ var styles = StyleSheet.create({
     subhead: {
         fontSize: 16,
         textAlign: 'center',
-        margin: 10
+        margin: 10,
+        color: 'blue'
+    },
+    tiny: {
+        fontSize: 10,
+        textAlign: 'center',
+        margin: 10,
+        color: 'blue'
     }
 });
+
+const darkStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center'
+    },
+    buttonContainer: {
+        margin: 20
+    },
+    hello: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+        color: 'white'
+    },
+    subhead: {
+        fontSize: 16,
+        textAlign: 'center',
+        margin: 10,
+        color: 'white'
+    },
+    tiny: {
+        fontSize: 10,
+        textAlign: 'center',
+        margin: 10,
+        color: 'blue'
+    }
+});
+
 
 AppRegistry.registerComponent(
     'MyReactNativeApp',
@@ -180,4 +293,8 @@ AppRegistry.registerComponent(
     () => HelloFragment1
 )
 
+AppRegistry.registerComponent(
+    'AppContainer',
+    () => HelloWorld
+)
 
