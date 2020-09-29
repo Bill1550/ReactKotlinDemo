@@ -12,8 +12,8 @@ import {
 import moment from 'moment';
 
 import ReactNativeActionToShell from './ReactNativeActionToShell'
-
 import  ActionSheet  from './ReactNativeActionSheet'
+import { getManufacturer, getModel } from "react-native-device-info";
 
 var staticDataItem = '-- empty --';
 var helloCounter = 0;  // some static data that we will modify.
@@ -22,8 +22,13 @@ let actionSheetOptions = ['Option one', 'Option two', 'Option three']
 
 class HelloWorld extends  React.Component {
     constructor(props) {
+
         super(props);
         this.state = { uiTheme: props.uiTheme, screen: props.screen };
+
+        // Test react-native-device-info lib
+        console.log( "Device model: " + getModel() );
+        getManufacturer().then(manufacturer => { console.log( "Manufacturer-" + manufacturer.toString() ) } );
     }
 
     render() {
@@ -31,6 +36,7 @@ class HelloWorld extends  React.Component {
         helloCounter++;
 
         return (
+
 
             <View style={activeStyle.container}>
                 <Text style={activeStyle.hello}>Hello from React Native!</Text>
