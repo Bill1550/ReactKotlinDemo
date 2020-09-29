@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import moment from 'moment';
 
-import ReactNativeActionToShell from './ReactNativeActionToShell'
-import  ActionSheet  from './ReactNativeActionSheet'
+import ReactNativeActionToShell from './ReactNativeActionToShell';
+import  ActionSheet  from './ReactNativeActionSheet';
 import { getManufacturer, getModel } from "react-native-device-info";
+import { WebView } from 'react-native-webview'
+import Svg, { Circle, Rect } from 'react-native-svg'
 
 var staticDataItem = '-- empty --';
 var helloCounter = 0;  // some static data that we will modify.
@@ -77,7 +79,19 @@ class HelloWorld extends  React.Component {
                     }}
                     title={"Action!"}
                 />
+                <Svg height="100" width="100">
+                    <Circle
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        stroke="blue"
+                        strokeWidth="2.5"
+                        fill="green"
+                    />
+                </Svg>
+
             </View>
+
         );
     }
 
